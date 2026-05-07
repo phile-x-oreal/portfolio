@@ -11,6 +11,11 @@ const skills = [
   { name: "JavaScript", level: 85, color: "from-yellow-300 to-amber-500" },
   { name: "React", level: 88, color: "from-cyan-300 to-sky-500" },
   { name: "MySQL", level: 82, color: "from-sky-400 to-indigo-500" },
+   { name: "Angular", level: 89, color: "from-sky-400 to-indigo-500" },
+    { name: "MongoDb", level: 88, color: "from-sky-400 to-indigo-500" },
+     { name: "Git", level: 85, color: "from-sky-400 to-indigo-500" }, 
+     { name: "Bootstrap", level: 87, color: "from-sky-400 to-indigo-500" },
+  
 ];
 
 function Ring({ value }: { value: number }) {
