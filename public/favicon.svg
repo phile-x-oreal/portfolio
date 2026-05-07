@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <style>
+      .favicon-bg { fill: #0a1929; }
+      .favicon-k { fill: #00d9ff; font-family: Arial, sans-serif; font-size: 60px; font-weight: bold; }
+    </style>
+  </defs>
+  <circle class="favicon-bg" cx="50" cy="50" r="50"/>
+  <text class="favicon-k" x="50" y="65" text-anchor="middle">K</text>
+</svg>
