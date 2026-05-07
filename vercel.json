@@ -1,9 +1,6 @@
 {
   "buildCommand": "npm run build",
   "outputDirectory": ".output/public",
-  "serverless": {
-    "default": true
-  },
   "rewrites": [
     {
       "source": "/(.*)",
