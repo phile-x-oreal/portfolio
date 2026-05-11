@@ -1,10 +1,47 @@
 import { motion } from "framer-motion";
 import { Mail, Phone, Send, Linkedin, Github } from "lucide-react";
 import { useState } from "react";
+import { sendContactEmail } from "../../lib/email";
 import { SectionHeader } from "./Section";
 
 export function Contact() {
   const [sent, setSent] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+    // Store form reference before await
+    const form = e.currentTarget;
+    try {
+      await sendContactEmail(form);
+      setSent(true);
+      setTimeout(() => setSent(false), 2500);
+      form.reset();
+    } catch (err) {
+      let message = "Failed to send message. Please try again later.";
+      if (err instanceof Error) {
+        message += `\nError: ${err.message}`;
+        // Log the error stack for debugging
+        if (err.stack) {
+          // eslint-disable-next-line no-console
+          console.error("EmailJS error:", err.stack);
+        } else {
+          // eslint-disable-next-line no-console
+          console.error("EmailJS error:", err);
+        }
+      } else {
+        // eslint-disable-next-line no-console
+        console.error("EmailJS error:", err);
+      }
+      setError(message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <section id="contact" className="relative py-28">
       <div className="absolute inset-0 -z-10" style={{ background: "radial-gradient(ellipse at 50% 50%, color-mix(in oklab, var(--neon-purple) 18%, transparent), transparent 60%)" }} />
@@ -54,7 +91,7 @@ export function Contact() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            onSubmit={(e) => { e.preventDefault(); setSent(true); setTimeout(() => setSent(false), 2500); }}
+            onSubmit={handleSubmit}
             className="glass-card p-8 space-y-4"
           >
             <div className="grid sm:grid-cols-2 gap-4">
@@ -65,10 +102,14 @@ export function Contact() {
             <Field label="Message" textarea name="message" />
             <button
               type="submit"
-              className="group relative inline-flex items-center justify-center gap-2 w-full rounded-xl px-6 py-3 font-medium text-background bg-gradient-to-r from-[var(--neon-cyan)] via-[var(--neon-blue)] to-[var(--neon-purple)] shadow-[0_0_24px_-6px_var(--neon-blue)] hover:shadow-[0_0_36px_var(--neon-purple)] transition"
+              className="group relative inline-flex items-center justify-center gap-2 w-full rounded-xl px-6 py-3 font-medium text-background bg-gradient-to-r from-[var(--neon-cyan)] via-[var(--neon-blue)] to-[var(--neon-purple)] shadow-[0_0_24px_-6px_var(--neon-blue)] hover:shadow-[0_0_36px_var(--neon-purple)] transition disabled:opacity-60"
+              disabled={loading}
             >
-              {sent ? "Message sent ✨" : (<><Send className="h-4 w-4" /> Send Message</>)}
+              {loading ? "Sending..." : sent ? "Message sent ✨" : (<><Send className="h-4 w-4" /> Send Message</>)}
             </button>
+            {error && (
+              <div className="text-red-500 text-sm pt-2 whitespace-pre-line">{error}</div>
+            )}
           </motion.form>
         </div>
       </div>
